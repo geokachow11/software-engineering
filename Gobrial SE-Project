@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futbol-istas!</title>
+    <title>E-Commerce</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         .tab-container {
@@ -30,7 +30,7 @@
 </head>
 <body>
     <header>
-        <div class="logo">Futbol-istas!</div>
+        <div class="logo">Shop</div>
     </header>
 
     <main class="tab-container">
@@ -38,19 +38,25 @@
             <button onclick="showTab('home')">Home</button>
             <button onclick="showTab('shop')">Shop</button>
             <button onclick="showTab('cart')">Cart</button>
-            <button onclick="showTab('user-login')">User Login</button>
-            <button onclick="showTab('admin')">Admin</button>
+            <button onclick="showTab('user-login')">Login</button>
         </div>
 
         <!-- Home Tab -->
         <section id="home" class="tab-content active">
-            <h1>Welcome to Futbol-istas!</h1>
-            <p>Where futbol players can buy the hottest gear and merch</p>
+            <h1>Welcome to Shop</h1>
+            <p>Browse and shop with ease.</p>
         </section>
 
         <!-- Shop Tab -->
         <section id="shop" class="tab-content">
             <h2>Products</h2>
+            <div>
+                <label for="price-filter">Sort by Price:</label>
+                <select id="price-filter" onchange="sortProducts()">
+                    <option value="low-high">Low to High</option>
+                    <option value="high-low">High to Low</option>
+                </select>
+            </div>
             <div id="product-list"></div>
         </section>
 
@@ -60,12 +66,12 @@
             <ul id="cart-items">
                 <p>Your cart is currently empty.</p>
             </ul>
-            <button onclick="submitOrder()">Buy</button>
+            <button onclick="submitOrder()">Checkout</button>
         </section>
 
         <!-- User Login/Register Tab -->
         <section id="user-login" class="tab-content">
-            <h2>User Login</h2>
+            <h2>Login</h2>
             <form id="login-form" onsubmit="handleLogin(event)">
                 <label for="user-email">Email:</label>
                 <input type="email" id="user-email" name="email" required>
@@ -87,30 +93,10 @@
                 <button type="submit">Register</button>
             </form>
         </section>
-
-        <!-- Admin Tab -->
-        <section id="admin" class="tab-content">
-            <h2>Admin Panel</h2>
-            <form id="add-product-form" onsubmit="addProduct(event)">
-                <label for="product-name">Product Name:</label>
-                <input type="text" id="product-name" name="product-name" required>
-
-                <label for="product-price">Price:</label>
-                <input type="number" id="product-price" name="product-price" required>
-
-                <label for="product-quantity">Quantity:</label>
-                <input type="number" id="product-quantity" name="product-quantity" required>
-
-                <button type="submit">Add Product</button>
-            </form>
-
-            <h3>Inventory</h3>
-            <ul id="inventory-list"></ul>
-        </section>
     </main>
 
     <footer>
-        <p>&copy; 2024 ShopAdmin. All rights reserved.</p>
+        <p>&copy; 2024 Shop. All rights reserved.</p>
     </footer>
 
     <script>
@@ -141,15 +127,6 @@
         }
 
         function updateInventory() {
-            const inventoryList = document.getElementById('inventory-list');
-            inventoryList.innerHTML = '';
-
-            products.forEach((product, index) => {
-                const li = document.createElement('li');
-                li.textContent = `${product.name} - $${product.price} (Quantity: ${product.quantity})`;
-                inventoryList.appendChild(li);
-            });
-
             updateProductList();
         }
 
@@ -171,6 +148,17 @@
 
                 productList.appendChild(productDiv);
             });
+        }
+
+        // Sort products by price
+        function sortProducts() {
+            const sortOption = document.getElementById('price-filter').value;
+            if (sortOption === 'low-high') {
+                products.sort((a, b) => a.price - b.price);
+            } else if (sortOption === 'high-low') {
+                products.sort((a, b) => b.price - a.price);
+            }
+            updateProductList();
         }
 
         // Add to cart
@@ -206,7 +194,7 @@
             const email = document.getElementById('user-email').value || 'unknown';
 
             if (cart.length > 0) {
-                alert(`Order submitted! Email: ${email}, Items: ${JSON.stringify(cart)}`);
+                alert(`Order submitted! Confirmation sent to: ${email}`);
                 cart.length = 0;
                 updateCart();
             } else {
